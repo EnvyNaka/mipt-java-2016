@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -16,15 +17,17 @@ import static java.util.stream.Collectors.groupingBy;
 public class Main {
 
     public static void main(String[] args) throws IOException{
-        Map<String, Long> collect =
-                Files.lines(Paths.get("/Users/igorhromov/Documents/input.txt"))
-                        .map(line -> line.split("[\\s]+"))
-                        .flatMap(Arrays::stream)
-                        .collect(groupingBy(e -> e, counting()));
-        System.out.println(collect);
-
+        Map<String, Long> collect = Files.lines(Paths.get("input.txt"))
+                .map(line -> line.split("[\\s]+"))
+                .flatMap(Arrays::stream)
+                .collect(groupingBy(e -> e, counting()))
+                .entrySet()
+                .stream()
+                .sorted((o1, o2) -> o1.getValue().compareTo(o2.getValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey,e -> e.getValue()));
+        collect.forEach((key, value) -> {System.out.println("wrod: \"" + key + "\" times: " + value);});
         Map<String, Integer> uniqueWordsAndCount = new HashMap<>();
-        Scanner sc2 = new Scanner(new File("/Users/igorhromov/Documents/input.txt"));
+        Scanner sc2 = new Scanner(new File("input.txt"));
         while (sc2.hasNextLine()) {
             Scanner s2 = new Scanner(sc2.nextLine());
             while (s2.hasNext()) {
