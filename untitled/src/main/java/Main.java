@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.counting;
@@ -23,8 +20,10 @@ public class Main {
                 .collect(groupingBy(e -> e, counting()))
                 .entrySet()
                 .stream()
-                .sorted((o1, o2) -> o1.getValue().compareTo(o2.getValue()))
-                .collect(Collectors.toMap(Map.Entry::getKey,e -> e.getValue()));
+                .sorted((o1, o2) -> (o1.getValue() > o2.getValue() ? 0 : 1))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (o1, o2) -> (o1 > o2 ? o1 : o2), LinkedHashMap::new));
+
         collect.forEach((key, value) -> {System.out.println("wrod: \"" + key + "\" times: " + value);});
         Map<String, Integer> uniqueWordsAndCount = new HashMap<>();
         Scanner sc2 = new Scanner(new File("input.txt"));
